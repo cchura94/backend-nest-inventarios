@@ -30,3 +30,11 @@ git branch
 ```
 git flow init
 ```
+- agregar un nuevo feature
+```
+git flow feature start add-configuracion
+```
+- finalizar el feature
+```
+git flow feature finish add-configuracion
+```
