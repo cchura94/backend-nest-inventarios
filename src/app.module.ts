@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/admin/users/users.module';
+import { User } from './modules/admin/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -13,10 +15,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: 'postgresql',
       database: 'backend_nest_inventarios',
       entities: [
-        __dirname + '/../**/*.entity{.ts,.js}'
+        User
+        // __dirname + '/../**/*.entity{.ts,.js}'
       ],
-      synchronize: false
-    })
+      synchronize: true
+    }),
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],

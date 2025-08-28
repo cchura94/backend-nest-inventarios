@@ -1,0 +1,25 @@
+GET http://127.0.0.1:3000/users
+
+### Guardar user
+POST http://127.0.0.1:3000/users
+Content-Type: application/json
+
+{
+    "name": "simon",
+    "email": "simon@mail.com",
+    "password": "simon54321"
+}
+### Mostrar
+GET http://127.0.0.1:3000/users/7ef19ea4-a321-459c-837b-e6856b8a610a
+
+### Modifdicar
+PATCH http://127.0.0.1:3000/users/7ef19ea4-a321-459c-837b-e6856b8a610a
+Content-Type: application/json
+
+{
+    "name": "maria modificado",
+    "email": "maria@mail.com"
+}
+
+### eliminar
+DELETE http://127.0.0.1:3000/users/7ef19ea4-a321-459c-837b-e6856b8a610a
