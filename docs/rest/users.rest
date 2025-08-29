@@ -5,9 +5,9 @@ POST http://127.0.0.1:3000/users
 Content-Type: application/json
 
 {
-    "name": "simon",
-    "email": "simon@mail.com",
-    "password": "simon54321"
+    "name": "admin1",
+    "email": "admin1@mail.com",
+    "password": "admin54321"
 }
 ### Mostrar
 GET http://127.0.0.1:3000/users/7ef19ea4-a321-459c-837b-e6856b8a610a
