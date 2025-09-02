@@ -19,7 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
         User
         // __dirname + '/../**/*.entity{.ts,.js}'
       ],
-      synchronize: true
+      synchronize: false
     }),
     UsersModule,
     AuthModule
