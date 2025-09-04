@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  backend_node_nest:
+    container_name: backend_node_nest
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - bd_postgres
+
+  bd_postgres:
+    container_name: bd_postgres
+    image: postgres:16-alpine
+    ports:
+      - "5444:5432"
+    environment:
+      POSTGRES_DB: backend_nest_inventarios
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgresql
+    volumes:
+      - postgresql_data:/var/postgresql/data
+
+volumes:
+  postgresql_data:
