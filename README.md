@@ -21,17 +21,21 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Descripción
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Nest](https://github.com/nestjs/nest) Repositorio de inicio de TypeScript del framework.
 
-## Project setup
+## Configuración del proyecto
 
 ```bash
 $ npm install
 ```
+## Configuración de variables de entorno
+- Para Base de Datos
+- Para desarrollo: copiar el archivo `.example.development.env` con el nombre `.development.env`
+- Para Producción: copiar el archivo `.example.production.env` con el nombre `.production.env`
 
-## Compile and run the project
+## Compilar y ejecutar el proyecto
 
 ```bash
 # development
@@ -57,7 +61,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+## Deployment (Despliegue)
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
