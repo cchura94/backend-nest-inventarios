@@ -1,26 +1,87 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Producto } from './entities/producto.entity';
+import { Repository } from 'typeorm';
+import { Categoria } from '../categoria/entities/categoria.entity';
+import { PaginatedProductoResponseDto } from './dto/paginated-producto-response.dto';
 
 @Injectable()
 export class ProductoService {
-  create(createProductoDto: CreateProductoDto) {
-    return 'This action adds a new producto';
+
+  constructor(
+    @InjectRepository(Producto)
+    private readonly productoRepository: Repository<Producto>,
+    @InjectRepository(Categoria)
+    private readonly categoriaRepository: Repository<Categoria>,
+  ){
+
   }
 
-  findAll() {
-    return `This action returns all producto`;
+  async create(createProductoDto: CreateProductoDto) {
+    // verificar si la categoria existe 
+    const categoria = await this.categoriaRepository.findOne({where: {id: createProductoDto.categoria}})
+    if(!categoria) throw new NotFoundException('Categoria no encontrada');
+
+    const producto = this.productoRepository.create({...createProductoDto, categoria});
+
+    return this.productoRepository.save(producto);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} producto`;
+  async findAll(page: number = 1, limit: number = 10, search: string = '', sortBy: string = 'id', order: 'ASC' | 'DESC' = 'ASC', almacen: number = 0, activo: boolean = true): Promise<PaginatedProductoResponseDto> {
+    
+    const queryBuilder = this.productoRepository.createQueryBuilder('producto')
+            .leftJoinAndSelect('producto.almacenes', 'almacen')
+            .where('producto.nombre iLIKE :search OR producto.marca LIKE :search', {
+              search: `%${search}%`
+            })
+            .andWhere('producto.estado = :estado', {estado:activo});
+    
+  
+
+    // ordenación
+    queryBuilder.orderBy(`producto.${sortBy}`, order);
+
+    // paginación
+    queryBuilder.skip((page - 1)*limit).take(limit);
+
+    const [productos, total] = await queryBuilder.getManyAndCount();
+    const totalPages = Math.ceil(total/limit)
+    return {
+      data: productos,
+      total,
+      limit,
+      page,
+      totalPages,
+      activo,
+      almacen,
+      order,
+      search,
+      sortBy
+    }
   }
 
-  update(id: number, updateProductoDto: UpdateProductoDto) {
-    return `This action updates a #${id} producto`;
+  async findOne(id: number) {
+    const producto = await this.productoRepository.findOne({where: {id}});
+    if(!producto) throw new NotFoundException('Producto no encontrado');
+    return producto;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} producto`;
+  async update(id: number, updateProductoDto: UpdateProductoDto) {
+    const producto = await this.findOne(id);
+    if(updateProductoDto.categoria){
+      const categoria = await this.categoriaRepository.findOne({where: {id: updateProductoDto.categoria}});
+      if(!categoria) throw new NotFoundException('Categoria no encontrada');
+      producto.categoria = categoria;
+    }
+    Object.assign(producto, updateProductoDto);
+    return this.productoRepository.save(producto);
+  }
+
+  async remove(id: number) {
+    const producto = await this.findOne(id);
+    producto.estado = false;
+    await this.productoRepository.save(producto);
   }
 }
