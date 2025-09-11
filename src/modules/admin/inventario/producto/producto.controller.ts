@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ProductoService } from './producto.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('producto')
 export class ProductoController {
@@ -10,6 +12,24 @@ export class ProductoController {
   @Post()
   create(@Body() createProductoDto: CreateProductoDto) {
     return this.productoService.create(createProductoDto);
+  }
+
+  @Post(':id/actualizar-imagen')
+  @UseInterceptors(FileInterceptor('imagen'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        imagen: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  uploadFile(@UploadedFile() file: Express.Multer.File, @Param('id') id: number){
+    return this.productoService.subidaImagen(file, id);
   }
 
   @Get()
