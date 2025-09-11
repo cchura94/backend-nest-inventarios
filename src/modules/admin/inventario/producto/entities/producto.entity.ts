@@ -35,5 +35,5 @@ export class Producto {
     categoria:Categoria;
 
     @OneToMany(() => AlmacenProducto, ap => ap.producto)
-    almacenes: AlmacenProducto;
+    almacenes: AlmacenProducto[];
 }

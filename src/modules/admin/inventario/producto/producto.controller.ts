@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { ProductoService } from './producto.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('producto')
 export class ProductoController {
@@ -12,9 +14,35 @@ export class ProductoController {
     return this.productoService.create(createProductoDto);
   }
 
+  @Post(':id/actualizar-imagen')
+  @UseInterceptors(FileInterceptor('imagen'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        imagen: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  uploadFile(@UploadedFile() file: Express.Multer.File, @Param('id') id: number){
+    return this.productoService.subidaImagen(file, id);
+  }
+
   @Get()
-  findAll() {
-    return this.productoService.findAll();
+  findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('search') search: string = '',
+    @Query('sortBy') sortBy: string = '',
+    @Query('order') order: 'ASC' | 'DESC' = 'ASC',
+    @Query('almacen') almacen: number = 0,
+    @Query('activo') activo: boolean = true
+  ) {
+    return this.productoService.findAll(page, limit, search, sortBy, order, almacen, activo);
   }
 
   @Get(':id')
