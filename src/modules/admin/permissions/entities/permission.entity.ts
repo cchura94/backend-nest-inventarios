@@ -4,7 +4,7 @@ import { Role } from "../../roles/entities/role.entity";
 @Entity()
 export class Permission {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     @Column({nullable: true})
     action: string; // 'create', 'read', 'update', 'delete'
