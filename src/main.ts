@@ -15,6 +15,7 @@ async function bootstrap() {
 
   // Swagger
   const config = new DocumentBuilder()
+  .addBearerAuth()
   .setTitle('Backend Api')
   .setDescription('Proyecto Backend api rest')
   .setVersion('1.0')
