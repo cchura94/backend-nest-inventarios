@@ -2,8 +2,8 @@ import { DataSource } from "typeorm";
 
 export default new DataSource({
     type: "postgres",
-    host: "bd_postgres",
-    port: 5432,
+    host: "localhost",
+    port: 5433,
     username: 'postgres',
     password: 'postgresql',
     database: 'backend_nest_inventarios',
