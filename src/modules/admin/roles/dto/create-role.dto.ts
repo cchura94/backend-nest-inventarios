@@ -15,6 +15,6 @@ export class CreateRoleDto {
     @ApiProperty()
     @IsOptional()
     @IsArray()
-    permissionIds?:string[];
+    permissionIds?:number[];
 
 }

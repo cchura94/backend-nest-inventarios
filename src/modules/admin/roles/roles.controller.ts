@@ -4,6 +4,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AssignPermissionDto } from './dto/assign-permissions.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -34,5 +35,26 @@ export class RolesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);
+  }
+
+  @Patch(':id/permissions')
+  addPermission(
+    @Param('id') id: number,
+    @Body() dto: AssignPermissionDto
+  ){
+    return this.rolesService.addPermissionToRole(id, dto.permissionIds);
+  }
+
+  @Delete(':id/permissions')
+  removePermission(
+    @Param('id') id: number,
+    @Body() dto: AssignPermissionDto
+  ){
+    return this.rolesService.removePermissionFromRole(id, dto.permissionIds);
+  }
+
+  @Get(':id/permissions')
+  getPermissions(@Param('id') id: number){
+    return this.rolesService.getPermissionOfRole(id);
   }
 }
