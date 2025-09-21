@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { NotaService } from './nota.service';
 import { CreateNotaDto } from './dto/create-nota.dto';
 import { UpdateNotaDto } from './dto/update-nota.dto';
+import { FindNotaDto } from './dto/find-nota-dto';
 
 @Controller('nota')
 export class NotaController {
@@ -13,8 +14,8 @@ export class NotaController {
   }
 
   @Get()
-  findAll() {
-    return this.notaService.findAll();
+  findAll(@Query() finNotaDto: FindNotaDto) {
+    return this.notaService.findAll(finNotaDto);
   }
 
   @Get(':id')

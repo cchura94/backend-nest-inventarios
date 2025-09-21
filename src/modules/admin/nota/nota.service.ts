@@ -11,6 +11,7 @@ import { Almacen } from '../inventario/almacen/entities/almacen.entity';
 import { Movimiento } from './entities/movimiento.entity';
 import { QueryRunner } from 'typeorm/browser';
 import { AlmacenProducto } from '../inventario/almacen/entities/almacen_producto.entity';
+import { FindNotaDto } from './dto/find-nota-dto';
 
 @Injectable()
 export class NotaService {
@@ -124,8 +125,35 @@ export class NotaService {
 
   }
 
-  findAll() {
-    return `This action returns all nota`;
+  async findAll(findNotaDto: FindNotaDto) {
+    const queryBuilder = this.dataSource.getRepository(Nota).createQueryBuilder('nota')
+
+    queryBuilder.leftJoinAndSelect('nota.cliente', 'cliente')
+    queryBuilder.leftJoinAndSelect('nota.user', 'user')
+    queryBuilder.leftJoinAndSelect('nota.movimientos', 'movimientos')
+
+    if(findNotaDto.tipo_nota){
+      queryBuilder.andWhere('nota.tipo_nota = :tipo_nota', {tipo_nota: findNotaDto.tipo_nota});
+    }
+
+    if(findNotaDto.estado_nota){
+      queryBuilder.andWhere('nota.estado_nota = :estado_nota', {estado_nota: findNotaDto.estado_nota});
+    }
+
+    if(findNotaDto.fecha_inicio){
+      queryBuilder.andWhere('nota.fecha >= :fecha_inicio', {fecha_inicio: findNotaDto.fecha_inicio});
+    }
+    if(findNotaDto.fecha_fin){
+      queryBuilder.andWhere('nota.fecha <= :fecha_fin', {fecha_fin: findNotaDto.fecha_fin});
+    }
+    
+
+    const notas = await queryBuilder.getMany();
+
+    if(!notas.length){
+      throw new NotFoundException('No se encontradoron notas')
+    }
+    return notas;
   }
 
   findOne(id: number) {
