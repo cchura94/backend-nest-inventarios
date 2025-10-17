@@ -131,6 +131,8 @@ export class NotaService {
     queryBuilder.leftJoinAndSelect('nota.cliente', 'cliente')
     queryBuilder.leftJoinAndSelect('nota.user', 'user')
     queryBuilder.leftJoinAndSelect('nota.movimientos', 'movimientos')
+    queryBuilder.leftJoinAndSelect('movimientos.producto', 'producto')
+    queryBuilder.leftJoinAndSelect('movimientos.almacen', 'almacen')
 
     if(findNotaDto.tipo_nota){
       queryBuilder.andWhere('nota.tipo_nota = :tipo_nota', {tipo_nota: findNotaDto.tipo_nota});
